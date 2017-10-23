@@ -1,6 +1,8 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.Shared.Protocol;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ConsoleBlob.Services
@@ -38,6 +40,35 @@ namespace ConsoleBlob.Services
             {
                 Console.WriteLine("Error: {0}", ex.Message); ;                                
             }
+        }
+
+        public void CreateCORSPolicy()
+        {
+            ServiceProperties sp = new ServiceProperties();
+            sp.Cors.CorsRules.Add(new CorsRule()
+            {
+                AllowedMethods = CorsHttpMethods.Get,
+                AllowedOrigins = new List<string>() { "http://localhost:8080/" },
+                MaxAgeInSeconds = 3600
+            });
+            _blobClient.SetServicePropertiesAsync(sp).Wait();
+            Console.WriteLine("Cors Policy Set !!!");
+        }
+
+        public void CreateSharedAccessPolicy()
+        {
+            SharedAccessBlobPolicy policy = new SharedAccessBlobPolicy()
+            {
+                SharedAccessExpiryTime = DateTime.UtcNow.AddHours(24),
+                Permissions = SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write | SharedAccessBlobPermissions.List
+            };
+
+            BlobContainerPermissions permissions = new BlobContainerPermissions();
+
+            permissions.SharedAccessPolicies.Clear();
+            permissions.SharedAccessPolicies.Add("PolicyName", policy);
+            _blobContainer.SetPermissionsAsync(permissions).Wait();
+            Console.WriteLine("Shared Access Policy Set !!!");
         }
 
         public void ListAttributes()

@@ -6,6 +6,8 @@ namespace ConsoleBlob.Services
     {
         void ClearMetadata();
         void CopyBlob(string fromBlobName, string toBlobName);
+        void CreateCORSPolicy();
+        void CreateSharedAccessPolicy();
         void ListAttributes();
         void ListMetadata();
         void SetMetaData(string key, string value);
