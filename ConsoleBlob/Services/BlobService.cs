@@ -34,11 +34,11 @@ namespace ConsoleBlob.Services
             {
                 var fromBlockBlob = _blobContainer.GetBlockBlobReference(fromBlobName);
                 var toBlockBlob = _blobContainer.GetBlockBlobReference(toBlobName);
-                toBlockBlob.StartCopyAsync(new Uri(fromBlockBlob.Uri.AbsoluteUri)).Wait();
+                toBlockBlob.StartCopyAsync(new Uri(fromBlockBlob.Uri.AbsoluteUri)).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: {0}", ex.Message); ;                                
+                Console.WriteLine("Error: {0}", ex.Message); ;
             }
         }
 
@@ -51,7 +51,7 @@ namespace ConsoleBlob.Services
                 AllowedOrigins = new List<string>() { "http://localhost:8080/" },
                 MaxAgeInSeconds = 3600
             });
-            _blobClient.SetServicePropertiesAsync(sp).Wait();
+            _blobClient.SetServicePropertiesAsync(sp).GetAwaiter().GetResult();
             Console.WriteLine("Cors Policy Set !!!");
         }
 
@@ -67,13 +67,13 @@ namespace ConsoleBlob.Services
 
             permissions.SharedAccessPolicies.Clear();
             permissions.SharedAccessPolicies.Add("PolicyName", policy);
-            _blobContainer.SetPermissionsAsync(permissions).Wait();
+            _blobContainer.SetPermissionsAsync(permissions).GetAwaiter().GetResult();
             Console.WriteLine("Shared Access Policy Set !!!");
         }
 
         public void ListAttributes()
         {
-            _blobContainer.FetchAttributesAsync().Wait();
+            _blobContainer.FetchAttributesAsync().GetAwaiter().GetResult();
             Console.WriteLine("Container Name : {0}", _blobContainer.StorageUri.PrimaryUri.ToString());
             Console.WriteLine("Last Modified : {0}", _blobContainer.Properties.LastModified.ToString());
             Console.WriteLine(Environment.NewLine);
@@ -81,7 +81,7 @@ namespace ConsoleBlob.Services
 
         public void ListMetadata()
         {
-            _blobContainer.FetchAttributesAsync().Wait();
+            _blobContainer.FetchAttributesAsync().GetAwaiter().GetResult();
             Console.WriteLine("Metadata:");
             Console.WriteLine(Environment.NewLine);
             foreach (var item in _blobContainer.Metadata)
@@ -95,7 +95,7 @@ namespace ConsoleBlob.Services
         public void SetMetaData(string key, string value)
         {
             _blobContainer.Metadata.Add(key, value);
-            _blobContainer.SetMetadataAsync().Wait();
+            _blobContainer.SetMetadataAsync().GetAwaiter().GetResult();
         }
 
         public void UploadBlob(string blobName, Stream file)
@@ -103,7 +103,7 @@ namespace ConsoleBlob.Services
             try
             {
                 var blockBlob = _blobContainer.GetBlockBlobReference(blobName);
-                blockBlob.UploadFromStreamAsync(file).Wait();
+                blockBlob.UploadFromStreamAsync(file).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
@@ -116,7 +116,7 @@ namespace ConsoleBlob.Services
             var directory = _blobContainer.GetDirectoryReference(directoryName);
             var subDirectory = directory.GetDirectoryReference(subDirectoryName);
             var blockBlob = subDirectory.GetBlockBlobReference(blobName);
-            blockBlob.UploadFromStreamAsync(file).Wait();
+            blockBlob.UploadFromStreamAsync(file).GetAwaiter().GetResult();
         }
     }
 }

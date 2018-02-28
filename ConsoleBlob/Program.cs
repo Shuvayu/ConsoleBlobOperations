@@ -10,7 +10,7 @@ namespace ConsoleBlob
     {
         public static IConfigurationRoot Configuration { get; set; }
 
-        static void Main(string[] args)
+        static void Main()
         {
             var builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -35,13 +35,13 @@ namespace ConsoleBlob
                     Console.WriteLine(Environment.NewLine);
                     blobService.ListAttributes();
                     blobService.ClearMetadata();
-                    blobService.SetMetaData("Author","Shuv");
+                    blobService.SetMetaData("Author", "Shuv");
                     blobService.SetMetaData("Date", DateTimeOffset.Now.Date.ToString());
                     blobService.ListMetadata();
                     blobService.CopyBlob(newBlobName, newBlobName.Replace(".jpg", "-copy.jpg"));
                     Console.WriteLine("Blob has been copied !!!");
                     Console.WriteLine(Environment.NewLine);
-                    blobService.UploadBlobSubDirectory("parent-directory","child-directory", newBlobName, fileStream);
+                    blobService.UploadBlobSubDirectory("parent-directory", "child-directory", newBlobName, fileStream);
                     Console.WriteLine("Blob has been uploaded again !!!");
                     Console.WriteLine(Environment.NewLine);
                 }
